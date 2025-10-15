@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { StudentGroupService } from './student-group.service';
-import { CreateStudentGroupDto } from './dto/create-student-group.dto';
-import { UpdateStudentGroupDto } from './dto/update-student-group.dto';
+import { CreateStudentGroupDto } from './interfaces/create-student-group.dto';
+import { UpdateStudentGroupDto } from './interfaces/update-student-group.dto';
 
 @Controller('student-group')
 export class StudentGroupController {

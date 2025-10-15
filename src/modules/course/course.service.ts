@@ -1,26 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './interfaces/create-course.dto';
 import { UpdateCourseDto } from './interfaces/update-course.dto';
+import { PrismaService } from 'src/core/prisma/prisma.service';
 
 @Injectable()
 export class CourseService {
-  create(createCourseDto: CreateCourseDto) {
-    return 'This action adds a new course';
+  constructor(private prismaService: PrismaService) { }
+
+  async create(createCourseDto: CreateCourseDto) {
+    let data = await this.prismaService.course.create({
+      data: createCourseDto
+    })
+    return {
+      data: data,
+      message: "Successfully Created Course"
+    }
   }
 
-  findAll() {
-    return `This action returns all course`;
+  async findAll() {
+    let data = await this.prismaService.course.findMany({ include: { category: true } })
+    return {
+      data: data,
+      message: "Successfully Getted All Courses"
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: number) {
+    let data = await this.prismaService.course.findFirst({
+      where: {
+        id: id
+      }
+    })
+    if (!data) throw new NotFoundException("id is not found")
+    return {
+      data: data,
+      message: "Successfully Getted One Course"
+    }
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: number, updateCourseDto: UpdateCourseDto) {
+    let updated_data = await this.prismaService.course.update({
+      where: {
+        id: id
+      },
+      data: updateCourseDto
+    })
+    return {
+      data: updated_data,
+      message: "Successfully Updated Course"
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: number) {
+    let data = await this.prismaService.course.delete({
+      where: {
+        id: id
+      }
+    })
+    if (!data) throw new NotFoundException("id is not found")
+    return {
+      data: data,
+      message: "Successfully Deleted One Course"
+    }
   }
 }

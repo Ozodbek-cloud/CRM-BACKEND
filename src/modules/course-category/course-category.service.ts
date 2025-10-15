@@ -1,26 +1,70 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseCategoryDto } from './interfaces/create-course-category.dto';
 import { UpdateCourseCategoryDto } from './interfaces/update-course-category.dto';
+import { PrismaService } from 'src/core/prisma/prisma.service';
 
 @Injectable()
 export class CourseCategoryService {
-  create(createCourseCategoryDto: CreateCourseCategoryDto) {
-    return 'This action adds a new courseCategory';
+  constructor(private prismaService: PrismaService) { }
+
+  async create(createCourseCategoryDto: CreateCourseCategoryDto) {
+    let data = await this.prismaService.courseCategory.create({
+      data: createCourseCategoryDto
+    })
+    return {
+      data: data,
+      message: "Successfully Created CourseCategory"
+    }
   }
 
-  findAll() {
-    return `This action returns all courseCategory`;
+  async findAll() {
+    let data = await this.prismaService.courseCategory.findMany({ include: { courses: true } })
+    return {
+      data: data,
+      message: "Successfully Getted all CourseCategory"
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} courseCategory`;
+  async findOne(id: number) {
+    let data = await this.prismaService.courseCategory.findFirst({
+      where: {
+        id: id
+      }
+    })
+    if (!data) throw new NotFoundException("id is not found")
+    return {
+      data: data,
+      message: "Successfully  Getted one CourseCategory"
+    }
   }
 
-  update(id: number, updateCourseCategoryDto: UpdateCourseCategoryDto) {
-    return `This action updates a #${id} courseCategory`;
+  async update(id: number, updateCourseCategoryDto: UpdateCourseCategoryDto) {
+    let data = await this.prismaService.courseCategory.update({
+      where: {
+        id: id
+      },
+      data: updateCourseCategoryDto
+    },
+    )
+    if (!data) throw new NotFoundException("id is not found")
+    return {
+      data: data,
+      message: "Successfully Updated"
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} courseCategory`;
+  async remove(id: number) {
+    let data = await this.prismaService.courseCategory.delete({
+      where: {
+        id: id
+      }
+    })
+    if (!data) throw new NotFoundException("id is not found")
+    return {
+      data: data,
+      message: "Successfully Deleted"
+    }
+
   }
 }

@@ -19,16 +19,16 @@ export class HisobotlarController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.hisobotlarService.findOne(+id);
+    return this.hisobotlarService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHisobotlarDto: UpdateHisobotlarDto) {
-    return this.hisobotlarService.update(+id, updateHisobotlarDto);
+    return this.hisobotlarService.update(id, updateHisobotlarDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.hisobotlarService.remove(+id);
+    return this.hisobotlarService.remove(id);
   }
 }

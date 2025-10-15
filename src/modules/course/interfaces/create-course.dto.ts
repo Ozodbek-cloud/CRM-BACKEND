@@ -16,7 +16,7 @@ export class CreateCourseDto {
   @ApiProperty({ example: 1500000, description: 'Narxi (so‘m)' })
   price: number;
 
-  @ApiProperty({ example: '/uploads/course.jpg', description: 'Kurs rasmi', required: false })
+  @ApiProperty({ example: '/uploads/course.jpg', description: 'Kurs rasmi', required: false , format:"binary"})
   photo?: string;
 
   @ApiProperty({ example: 120, description: 'Kurs davomiyligi (soat)' })

@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreateStudentGroupDto } from './dto/create-student-group.dto';
-import { UpdateStudentGroupDto } from './dto/update-student-group.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/core/prisma/prisma.service';
+import { UpdateStudentGroupDto } from './interfaces/update-student-group.dto';
+import { CreateStudentGroupDto } from './interfaces/create-student-group.dto';
 
 @Injectable()
 export class StudentGroupService {
-  create(createStudentGroupDto: CreateStudentGroupDto) {
-    return 'This action adds a new studentGroup';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createStudentGroupDto: CreateStudentGroupDto) {
+    const studentGroup = await this.prisma.studentGroup.create({ data: createStudentGroupDto });
+    return { message: 'Student group successfully created', data: studentGroup };
   }
 
-  findAll() {
-    return `This action returns all studentGroup`;
+  async findAll() {
+    const studentGroups = await this.prisma.studentGroup.findMany();
+    return { message: 'All student groups fetched successfully', data: studentGroups };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} studentGroup`;
+  async findOne(id: number) {
+    const studentGroup = await this.prisma.studentGroup.findUnique({ where: { id } });
+    if (!studentGroup) throw new NotFoundException(`Student group with ID ${id} not found`);
+    return { message: 'Student group fetched successfully', data: studentGroup };
   }
 
-  update(id: number, updateStudentGroupDto: UpdateStudentGroupDto) {
-    return `This action updates a #${id} studentGroup`;
+  async update(id: number, updateStudentGroupDto: UpdateStudentGroupDto) {
+    const existing = await this.prisma.studentGroup.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Student group with ID ${id} not found`);
+    const updated = await this.prisma.studentGroup.update({ where: { id }, data: updateStudentGroupDto });
+    return { message: 'Student group updated successfully', data: updated };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} studentGroup`;
+  async remove(id: number) {
+    const existing = await this.prisma.studentGroup.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException(`Student group with ID ${id} not found`);
+    await this.prisma.studentGroup.delete({ where: { id } });
+    return { message: `Student group with ID ${id} deleted successfully` };
   }
 }
