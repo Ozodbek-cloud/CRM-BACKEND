@@ -7,8 +7,9 @@ import { PrismaService } from 'src/core/prisma/prisma.service';
 export class TeacherService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createTeacherDto: CreateTeacherDto) {
-    const teacher = await this.prisma.teacher.create({ data: createTeacherDto });
+  async create(createTeacherDto: CreateTeacherDto, photo: Express.Multer.File) {
+    let file_name = photo.filename
+    const teacher = await this.prisma.teacher.create({ data: {...createTeacherDto, teacher_photo:file_name} });
     return { message: 'Teacher successfully created', data: teacher };
   }
 
@@ -23,10 +24,16 @@ export class TeacherService {
     return { message: 'Teacher fetched successfully', data: teacher };
   }
 
-  async update(id: number, updateTeacherDto: UpdateTeacherDto) {
+  async update(id: number, updateTeacherDto: UpdateTeacherDto, photo: Express.Multer.File) {
     const existing = await this.prisma.teacher.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`Teacher with ID ${id} not found`);
-    const updated = await this.prisma.teacher.update({ where: { id }, data: updateTeacherDto });
+
+    let file_name = existing.teacher_photo;
+    if (photo) {
+      file_name = photo.originalname;
+    }
+
+    const updated = await this.prisma.teacher.update({ where: { id }, data: {...updateTeacherDto, teacher_photo: file_name} });
     return { message: 'Teacher updated successfully', data: updated };
   }
 

@@ -1,20 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UnsupportedMediaTypeException, UploadedFile } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiConsumes } from '@nestjs/swagger';
 import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './interfaces/create-teacher.dto';
 import { UpdateTeacherDto } from './interfaces/update-teacher.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('Teacher')
 @Controller('teacher')
 export class TeacherController {
-  constructor(private readonly teacherService: TeacherService) {}
+  constructor(private readonly teacherService: TeacherService) { }
 
   @Post('create')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Create teacher' })
+  @ApiConsumes("multipart/form-data")
   @ApiResponse({ status: 201, description: 'Teacher created successfully' })
-  create(@Body() createTeacherDto: CreateTeacherDto) {
-    return this.teacherService.create(createTeacherDto);
+  @UseInterceptors(FileInterceptor('teacher_photo', {
+    storage: diskStorage({
+      destination: "./uploads/teacher_photo",
+      filename: (req, file, cb) => {
+        let posterName = file.originalname
+        cb(null, posterName)
+      }
+    }),
+
+    fileFilter: (req, file, callback) => {
+      let allowed: string[] = ['image/jpeg', 'image/jpg', 'image/png']
+      if (!allowed.includes(file.mimetype)) {
+        callback(new UnsupportedMediaTypeException("File tpe must be .jpg | .jpeg | .png "), false)
+
+      }
+      callback(null, true)
+    }
+  }))
+  create(@Body() createTeacherDto: CreateTeacherDto, @UploadedFile() photo: Express.Multer.File) {
+    return this.teacherService.create(createTeacherDto, photo);
   }
 
   @Get('all')
@@ -35,9 +56,28 @@ export class TeacherController {
   @Patch('update/:id')
   @ApiOperation({ summary: 'Update teacher by ID' })
   @ApiParam({ name: 'id', example: 1 })
+  @ApiConsumes("multipart/form-data")
   @ApiResponse({ status: 200, description: 'Teacher updated successfully' })
-  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
-    return this.teacherService.update(+id, updateTeacherDto);
+  @UseInterceptors(FileInterceptor('teacher_photo', {
+    storage: diskStorage({
+      destination: "./uploads/teacher_photo",
+      filename: (req, file, cb) => {
+        let posterName = file.originalname
+        cb(null, posterName)
+      }
+    }),
+
+    fileFilter: (req, file, callback) => {
+      let allowed: string[] = ['image/jpeg', 'image/jpg', 'image/png']
+      if (!allowed.includes(file.mimetype)) {
+        callback(new UnsupportedMediaTypeException("File tpe must be .jpg | .jpeg | .png "), false)
+
+      }
+      callback(null, true)
+    }
+  }))
+  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto, @UploadedFile() photo: Express.Multer.File) {
+    return this.teacherService.update(+id, updateTeacherDto, photo);
   }
 
   @Delete('delete/:id')

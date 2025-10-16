@@ -15,7 +15,7 @@ export class CreateTeacherDto {
   gender: Gender;
 
   @ApiProperty({ example: '/uploads/teacher.jpg', description: 'Rasm manzili', format: "binary" })
-  photo: string;
+  teacher_photo: string;
 
   @ApiProperty({ example: '1988-05-10', description: 'Tug‘ilgan sana' })
   birthday: Date;
