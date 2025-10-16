@@ -8,14 +8,13 @@ datasource db {
 }
 
 model Branch {
-  id        Int          @id @default(autoincrement())
-  name      String
-  region    String
-  district  String
-  address   String
-  phone     String
-  status    BranchStatus
-  center_id Int
+  id       Int          @id @default(autoincrement())
+  name     String
+  region   String
+  district String
+  address  String
+  phone    String
+  status   BranchStatus
 
   rooms            Room[]
   users            User[]
@@ -43,7 +42,7 @@ model User {
   email     String   @unique
   phone     String
   password  String
-  photo     String
+  photo     String?  @default("photo.jpg")
   role      UserRole
   branch_id Int
 
@@ -60,13 +59,13 @@ model CourseCategory {
 }
 
 model Course {
-  id              Int    @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   branch_id       Int
   category_id     Int
   name            String
   status          String
   price           Float
-  photo           String?
+  course_photo    String? @default("photo.jpg")
   duration_hours  Int
   duration_months Int
   description     String
@@ -103,7 +102,7 @@ model Student {
   password       String
   phone          String
   gander         Gender
-  photo          String
+  student_photo  String?  @default("photo.jpg")
   birthday       DateTime
   status         String
   other_detailes Json
@@ -125,18 +124,18 @@ model StudentGroup {
 }
 
 model Teacher {
-  id          Int      @id @default(autoincrement())
-  phone       String
-  email       String   @unique
-  fullname    String
-  gender      Gender
-  photo       String
-  birthday    DateTime
-  password    String
-  branch_id   Int
-  coin        Int
-  status      String
-  description String
+  id            Int      @id @default(autoincrement())
+  phone         String
+  email         String   @unique
+  fullname      String
+  gender        Gender
+  teacher_photo String   @default("photo.jpg")
+  birthday      DateTime
+  password      String
+  branch_id     Int
+  coin          Int
+  status        String
+  description   String
 
   branch Branch  @relation(fields: [branch_id], references: [id])
   groups Group[]

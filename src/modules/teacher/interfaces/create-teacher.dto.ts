@@ -14,7 +14,7 @@ export class CreateTeacherDto {
   @ApiProperty({ example: Gender.MALE, enum: Gender, description: 'Jinsi' })
   gender: Gender;
 
-  @ApiProperty({ example: '/uploads/teacher.jpg', description: 'Rasm manzili' })
+  @ApiProperty({ example: '/uploads/teacher.jpg', description: 'Rasm manzili', format: "binary" })
   photo: string;
 
   @ApiProperty({ example: '1988-05-10', description: 'Tug‘ilgan sana' })

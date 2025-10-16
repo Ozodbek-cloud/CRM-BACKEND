@@ -11,14 +11,14 @@ export class CreateStudentDto {
   @ApiProperty({ example: 'password123', description: 'Parol' })
   password: string;
 
-  @ApiProperty({ example: '+998901234567', description: 'Telefon raqami' })
+  @ApiProperty({ example: '+998901234567', description: 'Telefon raqami'})
   phone: string;
 
   @ApiProperty({ example: Gender.MALE, enum: Gender, description: 'Jinsi' })
   gander: Gender;
 
-  @ApiProperty({ example: '/uploads/student.jpg', description: 'Talaba rasmi' })
-  photo: string;
+  @ApiProperty({ example: '/uploads/student.jpg', description: 'Talaba rasmi', format: "binary"  })
+  student_photo: string;
 
   @ApiProperty({ example: '2002-05-10', description: 'Tug‘ilgan sana' })
   birthday: Date;

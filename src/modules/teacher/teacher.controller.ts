@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiConsumes } from '@nestjs/swagger';
 import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './interfaces/create-teacher.dto';
 import { UpdateTeacherDto } from './interfaces/update-teacher.dto';
@@ -10,6 +10,7 @@ export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}
 
   @Post('create')
+  @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Create teacher' })
   @ApiResponse({ status: 201, description: 'Teacher created successfully' })
   create(@Body() createTeacherDto: CreateTeacherDto) {

@@ -8,9 +8,22 @@ export class GroupService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createGroupDto: CreateGroupDto) {
-    const group = await this.prisma.group.create({ data: createGroupDto });
+    const group = await this.prisma.group.create({
+      data: {
+        ...createGroupDto,
+        start_date: new Date(createGroupDto.start_date),
+        end_date: new Date(createGroupDto.end_date),
+        start_time: new Date(createGroupDto.start_time),
+        branch_id: +createGroupDto.branch_id,
+        course_id: +createGroupDto.course_id,
+        room_id: +createGroupDto.room_id,
+        teacher_id: +createGroupDto.teacher_id,
+      },
+    });
+
     return { message: 'Group successfully created', data: group };
   }
+
 
   async findAll() {
     const groups = await this.prisma.group.findMany();

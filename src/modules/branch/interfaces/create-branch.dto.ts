@@ -24,6 +24,5 @@ export class CreateBranchDto {
   })
   status: BranchStatus;
 
-  @ApiProperty({ example: 1, description: 'Markaz (center) ID raqami' })
-  center_id: number;
+
 }

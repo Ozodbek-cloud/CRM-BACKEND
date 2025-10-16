@@ -14,7 +14,7 @@ export class CreateUserDto {
   @ApiProperty({ example: 'password123', description: 'Parol' })
   password: string;
 
-  @ApiProperty({ example: '/uploads/photo.jpg', description: 'Rasm manzili' })
+  @ApiProperty({ example: '/uploads/photo.jpg', description: 'Rasm manzili', format:"binary" })
   photo: string;
 
   @ApiProperty({

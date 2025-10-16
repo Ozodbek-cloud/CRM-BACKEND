@@ -17,7 +17,7 @@ export class CreateCourseDto {
   price: number;
 
   @ApiProperty({ example: '/uploads/course.jpg', description: 'Kurs rasmi', required: false , format:"binary"})
-  photo?: string;
+  course_photo?: string;
 
   @ApiProperty({ example: 120, description: 'Kurs davomiyligi (soat)' })
   duration_hours: number;
