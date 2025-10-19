@@ -24,6 +24,7 @@ export class CreateTeacherDto {
   password: string;
 
   @ApiProperty({ example: 1, description: 'Filial ID' })
+  
   branch_id: number;
 
   @ApiProperty({ example: 200, description: 'Coin miqdori' })

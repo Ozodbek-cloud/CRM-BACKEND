@@ -8,7 +8,7 @@ export class HisobotlarService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createHisobotlarDto: CreateHisobotlarDto) {
-    const hisobot = await this.prisma.hisobotlar.create({ data: createHisobotlarDto });
+    const hisobot = await this.prisma.hisobotlar.create({ data: {...createHisobotlarDto, data: new Date(createHisobotlarDto.data)} });
     return { message: 'Hisobot successfully created', data: hisobot };
   }
 

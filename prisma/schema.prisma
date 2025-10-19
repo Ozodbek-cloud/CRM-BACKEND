@@ -144,12 +144,12 @@ model Teacher {
 model Moliya {
   id           String @id @default(uuid())
   invoice      String
-  All_Kirim    BigInt
-  All_Chiqim   BigInt
-  foyda        BigInt
+  All_Kirim    String
+  All_Chiqim   String
+  foyda        String
   using_budjet Float
   supllier     String
-  summa        BigInt
+  summa        String
   status       String
 }
 

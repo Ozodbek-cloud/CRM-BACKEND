@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16
+    container_name: again_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: laststand
+    ports:
+      - "5433:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: again_app
+    restart: always
+    ports:
+      - "4664:4664"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: >
+      sh -c "
+      npx prisma generate &&
+      npx prisma migrate deploy &&
+      npm run start:prod
+      "
+
+volumes:
+  data:

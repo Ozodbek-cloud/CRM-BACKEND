@@ -5,11 +5,11 @@ import { PrismaService } from 'src/core/prisma/prisma.service';
 
 @Injectable()
 export class TeacherService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createTeacherDto: CreateTeacherDto, photo: Express.Multer.File) {
     let file_name = photo.filename
-    const teacher = await this.prisma.teacher.create({ data: {...createTeacherDto, teacher_photo:file_name} });
+    const teacher = await this.prisma.teacher.create({ data: { ...createTeacherDto, teacher_photo: file_name, branch_id: +createTeacherDto.branch_id, coin: +createTeacherDto.coin, birthday: new Date(createTeacherDto.birthday) } });
     return { message: 'Teacher successfully created', data: teacher };
   }
 
@@ -33,7 +33,7 @@ export class TeacherService {
       file_name = photo.originalname;
     }
 
-    const updated = await this.prisma.teacher.update({ where: { id }, data: {...updateTeacherDto, teacher_photo: file_name} });
+    const updated = await this.prisma.teacher.update({ where: { id }, data: { ...updateTeacherDto, teacher_photo: file_name } });
     return { message: 'Teacher updated successfully', data: updated };
   }
 
