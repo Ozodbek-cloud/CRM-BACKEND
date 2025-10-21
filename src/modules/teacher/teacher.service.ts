@@ -7,7 +7,7 @@ import { UpdateTeacherDto } from './interfaces/update-teacher.dto';
 export class TeacherService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** CREATE */
+
   async create(createTeacherDto: CreateTeacherDto, photo: Express.Multer.File) {
     const fileName = photo?.originalname || 'default.png';
 
@@ -24,20 +24,17 @@ export class TeacherService {
     return { message: 'Teacher successfully created', data: teacher };
   }
 
-  /** FIND ALL */
   async findAll() {
-    const teachers = await this.prisma.teacher.findMany();
+    const teachers = await this.prisma.teacher.findMany({include:{groups: true}});
     return { message: 'All teachers fetched successfully', data: teachers };
   }
-
-  /** FIND ONE */
+  
   async findOne(id: number) {
-    const teacher = await this.prisma.teacher.findUnique({ where: { id } });
+    const teacher = await this.prisma.teacher.findUnique({ where: { id }, include: {groups: {include: {room: true}}} });
     if (!teacher) throw new NotFoundException(`Teacher with ID ${id} not found`);
     return { message: 'Teacher fetched successfully', data: teacher };
   }
 
-  /** UPDATE */
   async update(id: number, updateTeacherDto: UpdateTeacherDto, photo?: Express.Multer.File) {
     const existing = await this.prisma.teacher.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`Teacher with ID ${id} not found`);

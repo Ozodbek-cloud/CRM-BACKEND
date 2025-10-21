@@ -26,19 +26,17 @@ export class UsersService {
     return { message: 'User successfully created', data: user };
   }
 
-  /** FIND ALL USERS */
   async findAll() {
     const users = await this.prisma.user.findMany();
     return { message: 'All users fetched successfully', data: users };
   }
 
-  /** FIND ONE USER */
   async findOne(id: number) {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException(`User with ID ${id} not found`);
     return { message: 'User fetched successfully', data: user };
   }
-
+  
   async update(id: number, updateUserDto: UpdateUserDto, photo?: Express.Multer.File) {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`User with ID ${id} not found`);
@@ -65,7 +63,6 @@ export class UsersService {
   }
 
 
-  /** DELETE USER */
   async remove(id: number) {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`User with ID ${id} not found`);
