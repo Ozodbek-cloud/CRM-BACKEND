@@ -11,8 +11,17 @@ import { StudentGroupModule } from './modules/student-group/student-group.module
 import { TeacherModule } from './modules/teacher/teacher.module';
 import { MolyaModule } from './modules/molya/molya.module';
 import { HisobotlarModule } from './modules/hisobotlar/hisobotlar.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
-  imports: [PrismaModule, UsersModule, BranchModule, RoomModule, CourseCategoryModule, CourseModule, GroupModule, StudentModule, StudentGroupModule, TeacherModule, MolyaModule, HisobotlarModule],
+  imports: [ServeStaticModule.forRoot(
+      {
+        rootPath: join(process.cwd(), 'uploads',),
+        serveRoot: '/',
+      },
+    ),
+
+PrismaModule, UsersModule, BranchModule, RoomModule, CourseCategoryModule, CourseModule, GroupModule, StudentModule, StudentGroupModule, TeacherModule, MolyaModule, HisobotlarModule],
 })
 export class AppModule {}

@@ -14,9 +14,9 @@ export class CourseController {
   @Post('create')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Create course' })
-  @UseInterceptors(FileInterceptor('photo', {
+  @UseInterceptors(FileInterceptor('course_photo', {
     storage: diskStorage({
-      destination: "./uploads/photo",
+      destination: "./uploads/course_photo",
       filename: (req, file, cb) => {
         let posterName = file.originalname
         cb(null, posterName)

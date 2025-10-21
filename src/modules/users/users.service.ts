@@ -5,7 +5,7 @@ import { UpdateUserDto } from './interfaces/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /** CREATE USER */
   async create(createUserDto: CreateUserDto, photo?: Express.Multer.File) {
@@ -39,26 +39,31 @@ export class UsersService {
     return { message: 'User fetched successfully', data: user };
   }
 
-  /** UPDATE USER */
   async update(id: number, updateUserDto: UpdateUserDto, photo?: Express.Multer.File) {
     const existing = await this.prisma.user.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`User with ID ${id} not found`);
 
     const fileName = photo?.originalname || existing.photo;
 
+    const updatedData = {
+      name: updateUserDto.name ?? existing.name,
+      email: updateUserDto.email ?? existing.email,
+      phone: updateUserDto.phone ?? existing.phone,
+      password: updateUserDto.password ?? existing.password,
+      branch_id: updateUserDto.branch_id
+        ? Number(updateUserDto.branch_id)
+        : existing.branch_id,
+      photo: fileName,
+    };
+
     const updated = await this.prisma.user.update({
       where: { id },
-      data: {
-        ...updateUserDto,
-        photo: fileName,
-        branch_id: updateUserDto.branch_id
-          ? Number(updateUserDto.branch_id)
-          : existing.branch_id,
-      },
+      data: updatedData,
     });
 
     return { message: 'User updated successfully', data: updated };
   }
+
 
   /** DELETE USER */
   async remove(id: number) {
