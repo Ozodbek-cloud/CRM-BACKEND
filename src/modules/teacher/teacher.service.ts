@@ -5,32 +5,41 @@ import { UpdateTeacherDto } from './interfaces/update-teacher.dto';
 
 @Injectable()
 export class TeacherService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
 
-  async create(createTeacherDto: CreateTeacherDto, photo: Express.Multer.File) {
+  async create(createTeacherDto: CreateTeacherDto, photo?: Express.Multer.File) {
     const fileName = photo?.originalname || 'default.png';
 
     const teacher = await this.prisma.teacher.create({
       data: {
-        ...createTeacherDto,
-        teacher_photo: fileName,
-        branch_id: Number(createTeacherDto.branch_id),
-        coin: Number(createTeacherDto.coin),
+        fullname: createTeacherDto.fullname,
+        phone: createTeacherDto.phone,
         birthday: new Date(createTeacherDto.birthday),
+        gender: createTeacherDto.gender,
+        email: createTeacherDto.email,
+        password: createTeacherDto.password,
+        status: createTeacherDto.status,
+        description: createTeacherDto.description,
+        teacher_photo: fileName,
+        coin: Number(createTeacherDto.coin) || 0,
+        branch: {
+          connect: { id: Number(createTeacherDto.branch_id) }
+        },
       },
     });
 
     return { message: 'Teacher successfully created', data: teacher };
   }
 
+
   async findAll() {
-    const teachers = await this.prisma.teacher.findMany({include:{groups: true}});
+    const teachers = await this.prisma.teacher.findMany({ include: { groups: true } });
     return { message: 'All teachers fetched successfully', data: teachers };
   }
-  
+
   async findOne(id: number) {
-    const teacher = await this.prisma.teacher.findUnique({ where: { id }, include: {groups: {include: {room: true}}} });
+    const teacher = await this.prisma.teacher.findUnique({ where: { id }, include: { groups: { include: { room: true } } } });
     if (!teacher) throw new NotFoundException(`Teacher with ID ${id} not found`);
     return { message: 'Teacher fetched successfully', data: teacher };
   }

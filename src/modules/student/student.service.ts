@@ -38,7 +38,7 @@ export class StudentService {
 
   async findAll() {
     try {
-      const students = await this.prisma.student.findMany();
+      const students = await this.prisma.student.findMany({include: {branch: {include: {courses: true}}}});
 
       return {
         message: '✅ All students fetched successfully',
