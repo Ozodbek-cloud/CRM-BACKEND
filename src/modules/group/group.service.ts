@@ -43,6 +43,7 @@ export class GroupService {
           branch: true,
           teacher: true,
           room: true,
+          studentGroups: {include: {student: true}}
         },
       });
 

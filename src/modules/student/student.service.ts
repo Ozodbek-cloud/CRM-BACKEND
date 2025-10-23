@@ -38,7 +38,7 @@ export class StudentService {
 
   async findAll() {
     try {
-      const students = await this.prisma.student.findMany({include: {branch: {include: {courses: true}}}});
+      const students = await this.prisma.student.findMany(    );
 
       return {
         message: '✅ All students fetched successfully',
@@ -54,7 +54,7 @@ export class StudentService {
 
   async findOne(id: string) {
     try {
-      const student = await this.prisma.student.findUnique({ where: { id } });
+      const student = await this.prisma.student.findUnique({ where: { id }, include: {studentGroups: {include: {group: {include:{course:true}}}}} });
 
       if (!student)
         throw new NotFoundException(`Student with ID ${id} not found`);
